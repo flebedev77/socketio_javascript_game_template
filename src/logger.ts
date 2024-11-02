@@ -11,7 +11,7 @@ const LOG_TYPE = {
 
 function log(msg: any, info_level: Number) {
     let date = new Date();
-    let dateStr = `[${date.getDay()}:${date.getHours()}:${date.getSeconds()}] `;
+    let dateStr = `[${date.getDay()}:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] `;
 
     if (!fs.existsSync(config.logs_path)) {
         console.warn(chalk.yellow(dateStr + `Logs folder does not exist at ${config.logs_path}`))
