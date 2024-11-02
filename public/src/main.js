@@ -20,6 +20,12 @@ function main() {
 
         utils.calculate_time();
 
+        globals.local_player.update();
+
+        globals.food_arr.forEach((food) => {
+            food.update();
+        })
+
         setTimeout(game_loop, globals.update_speed);
     }
 }

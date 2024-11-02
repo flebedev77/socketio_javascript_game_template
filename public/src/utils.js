@@ -13,3 +13,32 @@ export function calculate_time() {
         selector.fps_counter.innerText = "FPS: " + globals.fps;
     }
 }
+
+export class Vector2 {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    static distance(a, b) {
+        // if (!!vector || !!vector.x || !!vector.y) return null;
+
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    static normalized(v) {
+        const x = -v.x;
+        const y = -v.y;
+        const m = Math.sqrt(x * x + y * y);
+        return new Vector2(x / m, y / m);
+    }
+
+    static sub(a, b) {
+        return new Vector2(
+            a.x - b.x,
+            a.y - b.y
+        );
+    }
+}
