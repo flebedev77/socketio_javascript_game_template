@@ -4,7 +4,7 @@ import { pick_random_from_array, Vector2 } from "../utils.js";
 export class Snake {
     constructor(x, y, r, seg_amt, seg_len) {
         this.position = new Vector2(x, y);
-        this.head_radius = r * 1.2;
+        this.head_radius = r * 0.9;
 
         this.segment_radius = r;
         this.segment_amount = seg_amt;
@@ -13,6 +13,8 @@ export class Snake {
 
         this.move_direction = new Vector2(0, 0);
         this.speed = globals.player_speed.normal;
+
+        this.weight_loss_delay = 0;
 
         this.is_local_player = false;
 
@@ -26,15 +28,13 @@ export class Snake {
             let anchor = (i == 0) ? this.position : this.tail[i - 1].b;
             this.tail.push(new Segment(
                 anchor,
-                this.segment_length - (i / this.segment_amount) * (this.segment_length - globals.player_tail_size_offset_from_zero),
-                this.segment_radius - (i / this.segment_amount) * (this.segment_radius - globals.player_tail_size_offset_from_zero),
-                globals.player_colors[i % globals.player_colors.length],
             ));
         }
+        this.update_tail_radius();
     }
 
     draw() {
-        this.ctx.fillStyle = "red";
+        this.ctx.fillStyle = globals.player_colors[0];
         this.ctx.beginPath();
         this.ctx.arc(this.position.x, this.position.y, this.head_radius, 0, Math.PI * 2);
         this.ctx.fill();
@@ -56,6 +56,7 @@ export class Snake {
         this.tail.forEach((segment) => {
             segment.update();
         })
+        this.segment_amount = this.tail.length;
 
         if (this.is_local_player) {
             //keyboard movement
@@ -69,22 +70,70 @@ export class Snake {
 
                 this.move_direction = Vector2.normalized(move_vector);
 
-            //mouse movement
+                //mouse movement
             } else {
-                this.move_direction = Vector2.normalized(new Vector2(
-                    this.position.x - globals.mouse.position.x,
-                    this.position.y - globals.mouse.position.y
-                ));
+                //if snake gets too close to mouse, prefer keyboard movement
+                if (Vector2.distance(
+                    new Vector2(this.position.x, this.position.y),
+                    new Vector2(globals.mouse.position.x, globals.mouse.position.y)
+                ) > 2) {
+                    this.move_direction = Vector2.normalized(new Vector2(
+                        this.position.x - globals.mouse.position.x,
+                        this.position.y - globals.mouse.position.y
+                    ));
+                } else {
+                    globals.mouse.last_input_time = 0;
+                }
             }
 
             this.sprint(globals.input_actions.sprint);
         }
+
     }
 
     sprint(sprinting) {
         const delta_time = globals.delta_time;
 
         this.speed = (sprinting) ? globals.player_speed.sprint : globals.player_speed.normal;
+
+        if (sprinting) {
+            this.weight_loss_delay += delta_time;
+            if (this.weight_loss_delay > globals.player_sprint_weight_loss.rate && this.tail.length > globals.player_sprint_weight_loss.minumum_segments_for_loss) {
+                this.weight_loss_delay = 0;
+                this.tail.splice(
+                    this.tail.length - globals.player_sprint_weight_loss.segment_loss,
+                    globals.player_sprint_weight_loss.segment_loss
+                );
+                this.head_radius -= globals.player_sprint_weight_loss.segment_thickness_loss;
+                this.segment_radius -= globals.player_sprint_weight_loss.segment_thickness_loss;
+
+                this.update_tail_radius();
+            }
+        }
+    }
+
+    update_tail_radius() {
+        for(let i = 0; i < this.tail.length; i++) {
+            const seg = this.tail[i];
+            seg.length = this.segment_length - (i / this.tail.length) * (this.segment_length - globals.player_tail_size_offset_from_zero);
+            seg.radius = this.segment_radius - (i / this.tail.length) * (this.segment_radius - globals.player_tail_size_offset_from_zero);
+            seg.color = globals.player_colors[i % globals.player_colors.length];
+        }
+    }
+
+    eat(seg_amount, seg_radius) {
+        let added_segs = [];
+        for(let i = 0; i < seg_amount; i++) {
+            const anchor = (i == 0) ? this.tail[this.tail.length-1] : added_segs[i-1];
+            added_segs.push(new Segment(
+                anchor, //length and radius will be automatically corrected by update_tail_radius()
+            ));
+        }
+        this.tail.push(...added_segs);
+
+        this.segment_radius += seg_radius;
+        this.head_radius += seg_radius / 2;
+        this.update_tail_radius();
     }
 }
 
@@ -95,7 +144,7 @@ class Segment {
     * @param {number} len - Length of the segment
     * @param {number} radius - The thickness of the segment
     */
-    constructor(a, len, radius, color = "red") {
+    constructor(a, len = 0, radius = 0, color = "red") {
         this.a = a;
         this.b = new Vector2(0, 0);
         this.radius = radius;

@@ -19,10 +19,16 @@ export default {
     //player
     local_player: null,
     player_tail_size_offset_from_zero: 4, //If set to zero, the last tail segment will be infinitly thin and short
-    player_colors: ["red", "blue"],
+    player_colors: ["#4A2C0B", "#73610E"],
     player_speed: {
-        normal: 0.1,
-        sprint: 0.5,
+        normal: 0.2,
+        sprint: 0.4,
+    },
+    player_sprint_weight_loss: {
+        rate: 1000,
+        segment_loss: 1,
+        segment_thickness_loss: 0.3,
+        minumum_segments_for_loss: 4,
     },
 
     //food
