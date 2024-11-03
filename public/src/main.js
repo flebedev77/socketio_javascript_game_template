@@ -4,6 +4,10 @@ import init from "./core/init.js";
 
 import * as utils from "./utils.js";
 
+
+//managers
+import food_manager from "./managers/food_manager.js";
+
 const ctx = globals.canvas_context;
 const canvas = selector.canvas;
 
@@ -22,9 +26,7 @@ function main() {
 
         globals.local_player.update();
 
-        globals.food_arr.forEach((food) => {
-            food.update();
-        })
+        food_manager();
 
         setTimeout(game_loop, globals.update_speed);
     }

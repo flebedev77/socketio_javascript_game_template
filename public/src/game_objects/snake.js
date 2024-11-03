@@ -4,7 +4,7 @@ import { pick_random_from_array, Vector2 } from "../utils.js";
 export class Snake {
     constructor(x, y, r, seg_amt, seg_len) {
         this.position = new Vector2(x, y);
-        this.head_radius = r * 0.9;
+        this.head_radius = r * globals.player_head_size_multiplier;
 
         this.segment_radius = r;
         this.segment_amount = seg_amt;
@@ -98,14 +98,19 @@ export class Snake {
 
         if (sprinting) {
             this.weight_loss_delay += delta_time;
-            if (this.weight_loss_delay > globals.player_sprint_weight_loss.rate && this.tail.length > globals.player_sprint_weight_loss.minumum_segments_for_loss) {
+            if (
+                this.weight_loss_delay > globals.player_sprint_weight_loss.rate &&
+                this.tail.length > globals.player_sprint_weight_loss.minumum_segments_for_loss &&
+                this.segment_radius > globals.player_sprint_weight_loss.minumum_segment_radius_for_loss
+            ) {
                 this.weight_loss_delay = 0;
                 this.tail.splice(
                     this.tail.length - globals.player_sprint_weight_loss.segment_loss,
                     globals.player_sprint_weight_loss.segment_loss
                 );
-                this.head_radius -= globals.player_sprint_weight_loss.segment_thickness_loss;
+
                 this.segment_radius -= globals.player_sprint_weight_loss.segment_thickness_loss;
+                this.segment_length -= globals.player_sprint_weight_loss.segment_thickness_loss;
 
                 this.update_tail_radius();
             }
@@ -113,7 +118,9 @@ export class Snake {
     }
 
     update_tail_radius() {
-        for(let i = 0; i < this.tail.length; i++) {
+        this.head_radius = this.segment_radius * globals.player_head_size_multiplier;
+
+        for (let i = 0; i < this.tail.length; i++) {
             const seg = this.tail[i];
             seg.length = this.segment_length - (i / this.tail.length) * (this.segment_length - globals.player_tail_size_offset_from_zero);
             seg.radius = this.segment_radius - (i / this.tail.length) * (this.segment_radius - globals.player_tail_size_offset_from_zero);
@@ -126,8 +133,8 @@ export class Snake {
 
     eat(seg_amount, seg_radius) {
         let added_segs = [];
-        for(let i = 0; i < seg_amount; i++) {
-            const anchor = (i == 0) ? this.tail[this.tail.length-1].b : added_segs[i-1].b;
+        for (let i = 0; i < seg_amount; i++) {
+            const anchor = (i == 0) ? this.tail[this.tail.length - 1].b : added_segs[i - 1].b;
 
             added_segs.push(new Segment(
                 anchor, //length and radius will be automatically corrected by update_tail_radius()
@@ -136,7 +143,7 @@ export class Snake {
         this.tail.push(...added_segs);
 
         this.segment_radius += seg_radius;
-        this.head_radius += seg_radius * 0.5; //because head is radius, but segment its diameter
+        this.segment_length += seg_radius;
 
         this.update_tail_radius();
     }

@@ -20,6 +20,7 @@ export default {
     local_player: null,
     player_tail_size_offset_from_zero: 4, //If set to zero, the last tail segment will be infinitly thin and short
     player_colors: ["#4A2C0B", "#73610E"],
+    player_head_size_multiplier: 0.9,
     player_speed: {
         normal: 0.2,
         sprint: 0.4,
@@ -27,13 +28,14 @@ export default {
     player_sprint_weight_loss: {
         rate: 1000,
         segment_loss: 1,
-        segment_thickness_loss: 0.3,
+        segment_thickness_loss: 1,
         minumum_segments_for_loss: 4,
+        minumum_segment_radius_for_loss: 2,
     },
 
     //food
-    food_give_segment_amount: 5,
-    food_give_radius_amount: 5,
+    food_give_segment_amount: 1,
+    food_give_radius_amount: 1,
     food_colors: ["red", "green", "blue", "orange", "purple"],
     food_arr: [],
 
