@@ -61,6 +61,7 @@ export default function apply_input_listeners() {
                 any_input(globals.input_actions.type.KEYBOARD);
                 break;
             case "A":
+                globals.keys.left = false;
                 any_input(globals.input_actions.type.KEYBOARD);
                 break;
             case "S":

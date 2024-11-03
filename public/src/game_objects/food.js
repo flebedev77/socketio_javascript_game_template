@@ -1,11 +1,11 @@
 import globals from "../core/globals.js";
-import { Vector2 } from "../utils.js";
+import { Vector2, pick_random_from_array } from "../utils.js";
 
 export class Food {
     constructor(x, y, r) {
         this.position = new Vector2(x, y);
         this.radius = r;
-        this.color = globals.food_colors[Math.floor(Math.random() * globals.food_colors.length)];
+        this.color = pick_random_from_array(globals.food_colors);
 
         this.ctx = globals.canvas_context;
     }

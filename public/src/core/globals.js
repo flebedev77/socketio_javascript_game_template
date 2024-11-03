@@ -20,6 +20,10 @@ export default {
     local_player: null,
     player_tail_size_offset_from_zero: 4, //If set to zero, the last tail segment will be infinitly thin and short
     player_colors: ["red", "blue"],
+    player_speed: {
+        normal: 0.1,
+        sprint: 0.5,
+    },
 
     //food
     food_give_segment_amount: 5,

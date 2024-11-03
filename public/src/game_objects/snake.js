@@ -12,7 +12,7 @@ export class Snake {
         this.tail = [];
 
         this.move_direction = new Vector2(0, 0);
-        this.speed = 0.1;
+        this.speed = globals.player_speed.normal;
 
         this.is_local_player = false;
 
@@ -58,6 +58,7 @@ export class Snake {
         })
 
         if (this.is_local_player) {
+            //keyboard movement
             if (globals.keys.last_input_time >= globals.mouse.last_input_time) {
                 const move_vector = new Vector2(0, 0);
 
@@ -67,13 +68,23 @@ export class Snake {
                 if (globals.keys.down) move_vector.y -= 1;
 
                 this.move_direction = Vector2.normalized(move_vector);
+
+            //mouse movement
             } else {
                 this.move_direction = Vector2.normalized(new Vector2(
                     this.position.x - globals.mouse.position.x,
                     this.position.y - globals.mouse.position.y
                 ));
             }
+
+            this.sprint(globals.input_actions.sprint);
         }
+    }
+
+    sprint(sprinting) {
+        const delta_time = globals.delta_time;
+
+        this.speed = (sprinting) ? globals.player_speed.sprint : globals.player_speed.normal;
     }
 }
 
