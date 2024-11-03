@@ -7,9 +7,6 @@ export class Food {
         this.radius = r;
         this.color = pick_random_from_array(globals.food_colors);
 
-        this.eaten_give_segment_amount = 5;
-        this.eaten_give_segment_radius = 1;
-
         this.dead = false;
 
         this.ctx = globals.canvas_context;
@@ -30,7 +27,7 @@ export class Food {
 
         if (Vector2.distance(this.position, globals.local_player.position) < this.radius + globals.local_player.head_radius) {
             this.dead = true;
-            globals.local_player.eat(this.eaten_give_segment_amount, this.eaten_give_segment_radius);
+            globals.local_player.eat(globals.food_give_segment_amount, globals.food_give_radius_amount);
         }
     }
 }

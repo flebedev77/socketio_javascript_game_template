@@ -119,6 +119,9 @@ export class Snake {
             seg.radius = this.segment_radius - (i / this.tail.length) * (this.segment_radius - globals.player_tail_size_offset_from_zero);
             seg.color = globals.player_colors[i % globals.player_colors.length];
         }
+        this.tail.forEach((seg) => {
+            seg.update();
+        })
     }
 
     eat(seg_amount, seg_radius) {
