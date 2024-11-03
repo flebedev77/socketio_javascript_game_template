@@ -30,7 +30,7 @@ export default {
         segment_loss: 1,
         segment_thickness_loss: 1,
         minumum_segments_for_loss: 4,
-        minumum_segment_radius_for_loss: 2,
+        minumum_segment_radius_for_loss: 8,
     },
 
     //food
