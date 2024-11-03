@@ -35,6 +35,10 @@ export default function apply_input_listeners() {
                 globals.keys.right = true;
                 any_input(globals.input_actions.type.KEYBOARD);
                 break;
+            case " ":
+                globals.keys.space = true;
+                any_input(globals.input_actions.type.KEYBOARD);
+                break;
         }
     })
 
@@ -70,6 +74,10 @@ export default function apply_input_listeners() {
                 break;
             case "D":
                 globals.keys.right = false;
+                any_input(globals.input_actions.type.KEYBOARD);
+                break;
+            case " ":
+                globals.keys.space = false;
                 any_input(globals.input_actions.type.KEYBOARD);
                 break;
         }
