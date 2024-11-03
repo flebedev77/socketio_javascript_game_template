@@ -1,6 +1,6 @@
-import selector from "./selector.js";
-import globals from "./globals.js";
-import init from "./init.js";
+import selector from "./front_end/selector.js";
+import globals from "./core/globals.js";
+import init from "./core/init.js";
 
 import * as utils from "./utils.js";
 

@@ -27,7 +27,8 @@ function log(msg: any, info_level: Number) {
     }
 
     try {
-        fs.appendFileSync(path.join(config.logs_path, date.getDay().toString()) + ".log", dateStr + msg + "\n");
+        const logger_file_name = date.toLocaleDateString().replaceAll("/", "-");
+        fs.appendFileSync(path.join(config.logs_path, logger_file_name) + ".log", dateStr + msg + "\n");
     } catch (e) {
         console.error(chalk.red(dateStr + "Error appending log file "), e);
     }

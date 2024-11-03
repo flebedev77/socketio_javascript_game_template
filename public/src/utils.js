@@ -1,5 +1,5 @@
-import selector from "./selector.js";
-import globals from "./globals.js";
+import selector from "./front_end/selector.js";
+import globals from "./core/globals.js";
 
 export function calculate_time() {
     globals.previous_time = globals.current_time;
@@ -12,6 +12,10 @@ export function calculate_time() {
         globals.fps_display_delay = 0;
         selector.fps_counter.innerText = "FPS: " + globals.fps;
     }
+}
+
+export function pick_random_from_array(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
 }
 
 export class Vector2 {
@@ -32,6 +36,7 @@ export class Vector2 {
         const x = -v.x;
         const y = -v.y;
         const m = Math.sqrt(x * x + y * y);
+        if (m == 0) return new Vector2(0, 0);
         return new Vector2(x / m, y / m);
     }
 
@@ -40,5 +45,9 @@ export class Vector2 {
             a.x - b.x,
             a.y - b.y
         );
+    }
+
+    static clone(vector) {
+        return new Vector2(vector.x, vector.y);
     }
 }

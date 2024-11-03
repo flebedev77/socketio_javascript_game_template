@@ -1,0 +1,10 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "modules": false // Ensure ES modules are not transformed to CommonJS
+      }
+    ]
+  ]
+}

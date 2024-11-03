@@ -1,4 +1,4 @@
-import globals from "../globals.js";
+import globals from "../core/globals.js";
 import { Vector2 } from "../utils.js";
 
 export class Food {
