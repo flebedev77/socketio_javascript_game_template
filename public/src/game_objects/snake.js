@@ -124,7 +124,8 @@ export class Snake {
     eat(seg_amount, seg_radius) {
         let added_segs = [];
         for(let i = 0; i < seg_amount; i++) {
-            const anchor = (i == 0) ? this.tail[this.tail.length-1] : added_segs[i-1];
+            const anchor = (i == 0) ? this.tail[this.tail.length-1].b : added_segs[i-1].b;
+
             added_segs.push(new Segment(
                 anchor, //length and radius will be automatically corrected by update_tail_radius()
             ));
@@ -132,7 +133,8 @@ export class Snake {
         this.tail.push(...added_segs);
 
         this.segment_radius += seg_radius;
-        this.head_radius += seg_radius / 2;
+        this.head_radius += seg_radius * 0.5; //because head is radius, but segment its diameter
+
         this.update_tail_radius();
     }
 }

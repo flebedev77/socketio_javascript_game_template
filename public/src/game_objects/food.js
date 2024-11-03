@@ -7,7 +7,7 @@ export class Food {
         this.radius = r;
         this.color = pick_random_from_array(globals.food_colors);
 
-        this.eaten_give_segment_amount = 2;
+        this.eaten_give_segment_amount = 5;
         this.eaten_give_segment_radius = 1;
 
         this.dead = false;
