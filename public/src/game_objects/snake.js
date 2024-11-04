@@ -78,7 +78,7 @@ export class Snake {
                 if (Vector2.distance(
                     new Vector2(this.position.x, this.position.y),
                     new Vector2(globals.mouse.position.x, globals.mouse.position.y)
-                ) > 2) {
+                ) > globals.player_minumum_mouse_follow_distance) {
                     this.move_direction = Vector2.normalized(new Vector2(
                         this.position.x - globals.mouse.position.x,
                         this.position.y - globals.mouse.position.y
@@ -99,34 +99,35 @@ export class Snake {
         this.speed = (sprinting) ? globals.player_speed.sprint : globals.player_speed.normal;
 
         if (sprinting) {
-            this.weight_loss_delay += delta_time;
             if (
-                this.weight_loss_delay > globals.player_sprint_weight_loss.rate &&
                 this.tail.length > globals.player_sprint_weight_loss.minumum_segments_for_loss &&
                 this.segment_radius > globals.player_sprint_weight_loss.minumum_segment_radius_for_loss
             ) {
-                this.weight_loss_delay = 0;
-                this.tail.splice(
-                    this.tail.length - globals.player_sprint_weight_loss.segment_loss,
-                    globals.player_sprint_weight_loss.segment_loss
-                );
+                this.weight_loss_delay += delta_time;
+                if (this.weight_loss_delay > globals.player_sprint_weight_loss.rate) {
+                    this.weight_loss_delay = 0;
+                    this.tail.splice(
+                        this.tail.length - globals.player_sprint_weight_loss.segment_loss,
+                        globals.player_sprint_weight_loss.segment_loss
+                    );
 
-                this.segment_radius -= globals.player_sprint_weight_loss.segment_thickness_loss;
-                this.segment_length -= globals.player_sprint_weight_loss.segment_thickness_loss;
+                    this.segment_radius -= globals.player_sprint_weight_loss.segment_thickness_loss;
+                    this.segment_length -= globals.player_sprint_weight_loss.segment_thickness_loss;
 
-                this.update_tail_radius();
+                    this.update_tail_radius();
+                }
+                this.weight_loss_food_drop_delay += delta_time;
+                if (this.weight_loss_food_drop_delay > globals.player_sprint_weight_loss.food_drop_rate) {
+                    this.weight_loss_food_drop_delay = 0;
+    
+                    const last_segment = this.tail[this.tail.length - 1];
+                    globals.food_arr.push(new Food(
+                        last_segment.b.x,
+                        last_segment.b.y
+                    ));
+                }
             }
 
-            this.weight_loss_food_drop_delay += delta_time;
-            if (this.weight_loss_food_drop_delay > globals.player_sprint_weight_loss.food_drop_rate) {
-                this.weight_loss_food_drop_delay = 0;
-                
-                const last_segment = this.tail[this.tail.length - 1];
-                globals.food_arr.push(new Food(
-                    last_segment.b.x,
-                    last_segment.b.y
-                ));
-            }
         }
     }
 
@@ -162,7 +163,7 @@ export class Snake {
     }
 }
 
-class Segment {
+export class Segment {
     /**
     * Segment of the snake body
     * @param {Vector2} a - The anchor point
