@@ -1,5 +1,6 @@
 import globals from "../core/globals.js";
 import { pick_random_from_array, Vector2 } from "../utils.js";
+import { Food } from "./food.js";
 
 export class Snake {
     constructor(x, y, r, seg_amt, seg_len) {
@@ -15,6 +16,7 @@ export class Snake {
         this.speed = globals.player_speed.normal;
 
         this.weight_loss_delay = 0;
+        this.weight_loss_food_drop_delay = 0;
 
         this.is_local_player = false;
 
@@ -113,6 +115,17 @@ export class Snake {
                 this.segment_length -= globals.player_sprint_weight_loss.segment_thickness_loss;
 
                 this.update_tail_radius();
+            }
+
+            this.weight_loss_food_drop_delay += delta_time;
+            if (this.weight_loss_food_drop_delay > globals.player_sprint_weight_loss.food_drop_rate) {
+                this.weight_loss_food_drop_delay = 0;
+                
+                const last_segment = this.tail[this.tail.length - 1];
+                globals.food_arr.push(new Food(
+                    last_segment.b.x,
+                    last_segment.b.y
+                ));
             }
         }
     }

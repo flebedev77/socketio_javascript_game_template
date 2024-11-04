@@ -2,7 +2,7 @@ import globals from "../core/globals.js";
 import { Vector2, pick_random_from_array } from "../utils.js";
 
 export class Food {
-    constructor(x, y, r) {
+    constructor(x, y, r = globals.food_radius) {
         this.position = new Vector2(x, y);
         this.radius = r;
         this.color = pick_random_from_array(globals.food_colors);

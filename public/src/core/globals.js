@@ -27,6 +27,7 @@ export default {
     },
     player_sprint_weight_loss: {
         rate: 1000,
+        food_drop_rate: 1100,
         segment_loss: 1,
         segment_thickness_loss: 1,
         minumum_segments_for_loss: 4,
@@ -36,6 +37,7 @@ export default {
     //food
     food_give_segment_amount: 1,
     food_give_radius_amount: 1,
+    food_radius: 5,
     food_colors: ["red", "green", "blue", "orange", "purple"],
     food_arr: [],
 

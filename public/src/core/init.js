@@ -24,6 +24,6 @@ export default function init() {
     
 
     for(let i = 0; i < 30; i++) {
-        globals.food_arr.push(new Food(Math.random() * window.innerWidth, Math.random() * window.innerHeight, 10));
+        globals.food_arr.push(new Food(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
     }
 }
