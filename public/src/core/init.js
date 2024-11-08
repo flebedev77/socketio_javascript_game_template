@@ -4,6 +4,7 @@ import apply_input_listeners from "./input.js";
 import { Snake } from "../game_objects/snake.js";
 import { Food } from "../game_objects/food.js";
 import { Vector2 } from "../utils.js";
+import { init_network } from "./networking.js";
 
 //ran on page load
 export default function init() {
@@ -17,11 +18,8 @@ export default function init() {
         resize_canvas();
     }
 
-    globals.local_player = new Snake(window.innerWidth/2, window.innerHeight/2, 10, 20, 10);    
-    globals.local_player.is_local_player = true;
-
     apply_input_listeners();
-    
+    init_network();    
 
     for(let i = 0; i < 30; i++) {
         globals.food_arr.push(new Food(Math.random() * window.innerWidth, Math.random() * window.innerHeight));

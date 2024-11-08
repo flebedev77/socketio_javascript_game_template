@@ -1,9 +1,9 @@
 import selector from "../front_end/selector.js";
+import { Snake } from "../game_objects/snake.js";
 import { Vector2 } from "../utils.js";
 
 export default {
     canvas_context: selector.canvas.getContext("2d"),
-    socket: io(),
 
     //time
     update_speed: 1000/60,
@@ -17,17 +17,19 @@ export default {
     fps_display_rate: 100,
 
     //player
-    local_player: null,
+    local_player: new Snake(0, 0, 0), //Player initialized in networking.js
     player_tail_size_offset_from_zero: 4, //If set to zero, the last tail segment will be infinitly thin and short
-    player_colors: ["#4A2C0B", "#73610E"],
+    local_player_colors: ["#4A2C0B", "#73610E"],
+    network_player_colors: ["#181C14", "#3C3D37"],
     player_head_size_multiplier: 0.9,
+    player_minumum_mouse_follow_distance: 5,
     player_speed: {
         normal: 0.2,
         sprint: 0.4,
     },
     player_sprint_weight_loss: {
         rate: 1000,
-        food_drop_rate: 1100,
+        food_drop_rate: 1500,
         segment_loss: 1,
         segment_thickness_loss: 1,
         minumum_segments_for_loss: 4,
@@ -68,4 +70,11 @@ export default {
             KEYBOARD: 2,
         },
     },
+
+    //networking
+    socket: io(),
+    socket_previously_connected: false,
+    network_players: {},
+
+    network_update_ping: 1000, //So that the clients dont ddos the server
 }

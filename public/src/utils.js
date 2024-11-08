@@ -50,4 +50,21 @@ export class Vector2 {
     static clone(vector) {
         return new Vector2(vector.x, vector.y);
     }
+
+    static magnitude(vector) {
+        const x = -vector.x;
+        const y = -vector.y;
+        return Math.sqrt(x * x + y * y);
+    }
+
+    static from_object(obj) {
+        return new Vector2(obj.x, obj.y);
+    }
+
+    to_object() {
+        return {
+            x: this.x,
+            y: this.y
+        };
+    }
 }

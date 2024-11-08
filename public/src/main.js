@@ -7,6 +7,7 @@ import * as utils from "./utils.js";
 
 //managers
 import food_manager from "./managers/food_manager.js";
+import networking_manager from "./managers/networking_manager.js";
 
 const ctx = globals.canvas_context;
 const canvas = selector.canvas;
@@ -27,6 +28,7 @@ function main() {
         globals.local_player.update();
 
         food_manager();
+        networking_manager();
 
         setTimeout(game_loop, globals.update_speed);
     }

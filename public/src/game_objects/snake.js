@@ -3,8 +3,9 @@ import { pick_random_from_array, Vector2 } from "../utils.js";
 import { Food } from "./food.js";
 
 export class Snake {
-    constructor(x, y, r, seg_amt, seg_len) {
+    constructor(x, y, r, seg_amt = 20, seg_len = 10) {
         this.position = new Vector2(x, y);
+        this.previous_position = new Vector2(x, y);
         this.head_radius = r * globals.player_head_size_multiplier;
 
         this.segment_radius = r;
@@ -26,6 +27,7 @@ export class Snake {
     }
 
     init() {
+        this.tail = [];
         for (let i = 0; i < this.segment_amount; i++) {
             let anchor = (i == 0) ? this.position : this.tail[i - 1].b;
             this.tail.push(new Segment(
@@ -36,7 +38,7 @@ export class Snake {
     }
 
     draw() {
-        this.ctx.fillStyle = globals.player_colors[0];
+        this.ctx.fillStyle = (this.is_local_player) ? globals.local_player_colors[0] : globals.network_player_colors[0];
         this.ctx.beginPath();
         this.ctx.arc(this.position.x, this.position.y, this.head_radius, 0, Math.PI * 2);
         this.ctx.fill();
@@ -52,6 +54,7 @@ export class Snake {
 
         const delta_time = globals.delta_time;
 
+        this.previous_position = Vector2.clone(this.position);
         this.position.x += this.move_direction.x * this.speed * delta_time;
         this.position.y += this.move_direction.y * this.speed * delta_time;
 
@@ -138,7 +141,9 @@ export class Snake {
             const seg = this.tail[i];
             seg.length = this.segment_length - (i / this.tail.length) * (this.segment_length - globals.player_tail_size_offset_from_zero);
             seg.radius = this.segment_radius - (i / this.tail.length) * (this.segment_radius - globals.player_tail_size_offset_from_zero);
-            seg.color = globals.player_colors[i % globals.player_colors.length];
+            seg.color = (this.is_local_player) ? 
+                globals.local_player_colors[i % globals.local_player_colors.length] :
+                globals.network_player_colors[i % globals.network_player_colors.length];
         }
         this.tail.forEach((seg) => {
             seg.update();
