@@ -17,7 +17,7 @@ export default {
     fps_display_rate: 100,
 
     //player
-    local_player: new Snake(0, 0, 0), //Player initialized in networking.js
+    local_player: null, //Player initialized in networking.js
     player_tail_size_offset_from_zero: 4, //If set to zero, the last tail segment will be infinitly thin and short
     local_player_colors: ["#4A2C0B", "#73610E"],
     network_player_colors: ["#181C14", "#3C3D37"],

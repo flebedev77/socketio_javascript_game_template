@@ -6,7 +6,7 @@ export class Snake {
     constructor(x, y, r, seg_amt = 20, seg_len = 10) {
         this.position = new Vector2(x, y);
         this.previous_position = new Vector2(x, y);
-        this.head_radius = r * globals.player_head_size_multiplier;
+        this.head_radius = (globals != null) ? r * globals.player_head_size_multiplier : 0;
 
         this.segment_radius = r;
         this.segment_amount = seg_amt;

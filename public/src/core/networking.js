@@ -52,5 +52,8 @@ export function init_network() {
 }
 
 export function network_heartbeat() {
-   socket.emit("player_update", globals.local_player.move_direction.to_object());
+    const socket = globals.socket;
+    if (globals.local_player.move_direction.x != 0 || globals.local_player.move_direction != 0) {
+        socket.emit("player_update", globals.local_player.move_direction.to_object());
+    }
 }

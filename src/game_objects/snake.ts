@@ -3,7 +3,7 @@ import { Vector2 } from "../core/utils";
 export class Snake {
     position: Vector2;
     move_direction: Vector2;
-    constructor(x: Number, y: Number) {
+    constructor(x: number, y: number) {
         this.position = new Vector2(x, y);
         this.move_direction = new Vector2(0, 0);
     }

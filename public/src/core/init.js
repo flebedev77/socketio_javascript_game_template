@@ -18,6 +18,8 @@ export default function init() {
         resize_canvas();
     }
 
+    globals.local_player = new Snake(0, 0, 0);
+
     apply_input_listeners();
     init_network();    
 

@@ -1,13 +1,13 @@
 type Vector2_Type = {
-    x: Number;
-    y: Number;
+    x: number;
+    y: number;
 }
 
 
 export class Vector2 {
-    x: Number;
-    y: Number;
-    constructor(x: Number, y: Number) {
+    x: number;
+    y: number;
+    constructor(x: number, y: number) {
         this.x = x;
         this.y = y;
     }
