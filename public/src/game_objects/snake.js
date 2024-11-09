@@ -14,6 +14,7 @@ export class Snake {
         this.tail = [];
 
         this.move_direction = new Vector2(0, 0);
+        this.previous_move_direction = new Vector2(0, 0);
         this.speed = globals.player_speed.normal;
 
         this.weight_loss_delay = 0;
@@ -73,6 +74,7 @@ export class Snake {
                 if (globals.keys.up) move_vector.y += 1;
                 if (globals.keys.down) move_vector.y -= 1;
 
+                this.previous_move_direction = Vector2.clone(this.move_direction);
                 this.move_direction = Vector2.normalized(move_vector);
 
                 //mouse movement
@@ -88,6 +90,9 @@ export class Snake {
                     ));
                 } else {
                     globals.mouse.last_input_time = 0;
+
+                    this.previous_move_direction = Vector2.clone(this.move_direction);
+                    this.move_direction = new Vector2(0, 0);
                 }
             }
 
@@ -122,7 +127,7 @@ export class Snake {
                 this.weight_loss_food_drop_delay += delta_time;
                 if (this.weight_loss_food_drop_delay > globals.player_sprint_weight_loss.food_drop_rate) {
                     this.weight_loss_food_drop_delay = 0;
-    
+
                     const last_segment = this.tail[this.tail.length - 1];
                     globals.food_arr.push(new Food(
                         last_segment.b.x,
@@ -141,7 +146,7 @@ export class Snake {
             const seg = this.tail[i];
             seg.length = this.segment_length - (i / this.tail.length) * (this.segment_length - globals.player_tail_size_offset_from_zero);
             seg.radius = this.segment_radius - (i / this.tail.length) * (this.segment_radius - globals.player_tail_size_offset_from_zero);
-            seg.color = (this.is_local_player) ? 
+            seg.color = (this.is_local_player) ?
                 globals.local_player_colors[i % globals.local_player_colors.length] :
                 globals.network_player_colors[i % globals.network_player_colors.length];
         }

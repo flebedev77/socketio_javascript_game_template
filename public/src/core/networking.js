@@ -1,5 +1,6 @@
 import globals from "./globals.js";
 import { Snake } from "../game_objects/snake.js";
+import { Vector2 } from "../utils.js";
 
 export function init_network() {
     const socket = globals.socket;
@@ -49,11 +50,27 @@ export function init_network() {
     socket.on("socket_disconnected", (disconnected_player_socket_id) => {
         delete globals.network_players[disconnected_player_socket_id];
     })
+
+    socket.on("player_update", (player_socket_id, player_new_position, player_new_move_direction) => {
+        globals.network_players[player_socket_id].move_direction = Vector2.from_object(player_new_move_direction);
+
+        globals.network_players[player_socket_id].position.x = player_new_position.x;
+        globals.network_players[player_socket_id].position.y = player_new_position.y;
+    })
+
+    socket.on("local_player_sync", (id, server_player) => {
+        if (id != socket.id) return;
+        globals.local_player.position.x = server_player.position.x;
+        globals.local_player.position.y = server_player.position.y;
+        globals.local_player.move_direction = Vector2.from_object(server_player.move_direction);
+    })
 }
 
 export function network_heartbeat() {
     const socket = globals.socket;
-    if (globals.local_player.move_direction.x != 0 || globals.local_player.move_direction != 0) {
+    if (Vector2.magnitude(globals.local_player.move_direction) != 0) {
         socket.emit("player_update", globals.local_player.move_direction.to_object());
+    } else {
+        socket.emit("player_stop");
     }
 }

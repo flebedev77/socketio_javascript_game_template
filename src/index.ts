@@ -24,6 +24,7 @@ net_handler.init_network();
 
 //@ts-ignore
 globals.io.on("connection", (socket) => {
+    socket.join(socket.id);
     logger.log_info(`Socket connected with id ${socket.id}`);
 
     net_handler.handle_connection(socket);
