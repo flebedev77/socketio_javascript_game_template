@@ -5,6 +5,10 @@ import { Vector2 } from "../utils.js";
 export function init_network() {
     const socket = globals.socket;
 
+    window.addEventListener("DOMContentLoaded", () => {
+        socket.emit("socket_client_ready");
+    })
+
     socket.on("connect", () => {
         //If was reconnected (if the server crashed and came back up) then refresh the client
         if (globals.socket_previously_connected) {

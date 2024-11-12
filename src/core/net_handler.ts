@@ -6,9 +6,13 @@ import { Vector2 } from "./utils";
 export function handle_connection(socket: Socket) {
     globals.players[socket.id] = new Snake(Math.random() * 600, Math.random() * 400);
 
-    socket.emit("update_players", globals.players);
-    socket.emit("local_player_server_handshake", globals.players[socket.id].to_object());
     socket.broadcast.emit("new_player", globals.players[socket.id], socket.id)
+    // local_player_server_handshake: does the initial sync of the clientside player to the serverside player
+    socket.emit("local_player_server_handshake", globals.players[socket.id].to_object());
+
+    setInterval(() => {
+        socket.emit("update_players", globals.players);
+    }, 1500);
 
     socket.on("disconnect", () => {
         delete globals.players[socket.id];

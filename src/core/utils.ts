@@ -20,3 +20,5 @@ export class Vector2 {
         return { x: this.x, y: this.y };
     }
 }
+
+// export function 

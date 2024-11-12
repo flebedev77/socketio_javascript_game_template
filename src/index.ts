@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 app.use(express.static(config.public_serve_path));
 
-const server = app.listen(PORT, logger.log_info(`Server listening on port ${PORT}`));
+const server = app.listen(PORT, "0.0.0.0", logger.log_info(`Server listening on port ${PORT}`));
 
 //@ts-ignore
 globals.io = new Server(server, {
