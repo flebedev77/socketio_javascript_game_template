@@ -4,7 +4,10 @@ import type { Snake } from "../game_objects/snake"
 
 export default {
     players: {} as { [id: string]: Snake },
-    player_speed: 0.2,
+    player_speed: {
+        normal: 0.2,
+        sprint: 0.4,
+    },
     io: new Server(),
 
     update_speed: 1000/60,

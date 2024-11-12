@@ -18,7 +18,9 @@ export default function init() {
         resize_canvas();
     }
 
-    globals.local_player = new Snake(0, 0, 0);
+    globals.local_player = new Snake(0, 0, 10);
+    globals.local_player.is_local_player = true;
+    globals.local_player.init();
 
     apply_input_listeners();
     init_network();    

@@ -18,7 +18,7 @@ export default {
 
     //player
     local_player: null, //Player initialized in networking.js
-    player_tail_size_offset_from_zero: 4, //If set to zero, the last tail segment will be infinitly thin and short
+    player_tail_size_offset_from_zero: 8, //If set to zero, the last tail segment will be infinitly thin and short
     local_player_colors: ["#4A2C0B", "#73610E"],
     network_player_colors: ["#181C14", "#3C3D37"],
     player_head_size_multiplier: 0.9,
@@ -75,6 +75,11 @@ export default {
     socket: io(),
     socket_previously_connected: false,
     network_players: {},
-
     network_update_ping: 1000, //So that the clients dont ddos the server
+    network_event_type: {
+        sprint: {
+            start: 1,
+            stop: 2,
+        },
+    },
 }

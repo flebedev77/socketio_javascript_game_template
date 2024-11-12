@@ -24,6 +24,16 @@ export function handle_connection(socket: Socket) {
         globals.players[socket.id].move_direction = new Vector2(0, 0);
         send_player_update(socket, socket.id);
     })
+
+    socket.on("player_sprint_start", () => {
+        globals.players[socket.id].sprint(true);
+        socket.broadcast.emit("player_sprint_start", socket.id);
+    })
+
+    socket.on("player_sprint_stop", () => {
+        globals.players[socket.id].sprint(false);
+        socket.broadcast.emit("player_sprint_stop", socket.id);
+    })
 }
 
 function send_player_update(socket: Socket, id: string) {
@@ -31,7 +41,7 @@ function send_player_update(socket: Socket, id: string) {
 }
 
 export function network_heartbeat() {
-    for(const player_socket_id in globals.players) {
+    for (const player_socket_id in globals.players) {
         globals.io.emit("local_player_sync", player_socket_id, globals.players[player_socket_id].to_object());
     }
 }

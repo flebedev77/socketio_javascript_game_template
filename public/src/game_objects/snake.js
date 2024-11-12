@@ -1,6 +1,7 @@
 import globals from "../core/globals.js";
 import { pick_random_from_array, Vector2 } from "../utils.js";
 import { Food } from "./food.js";
+import { network_event } from "../core/networking.js";
 
 export class Snake {
     constructor(x, y, r, seg_amt = 20, seg_len = 10) {
@@ -104,6 +105,14 @@ export class Snake {
     sprint(sprinting) {
         const delta_time = globals.delta_time;
 
+        if (this.is_local_player) {
+            if (this.speed == globals.player_speed.normal && sprinting) {
+                network_event(globals.network_event_type.sprint.start);
+            } else if (this.speed == globals.player_speed.sprint && !sprinting) {
+                network_event(globals.network_event_type.sprint.stop);
+            }
+        }
+
         this.speed = (sprinting) ? globals.player_speed.sprint : globals.player_speed.normal;
 
         if (sprinting) {
@@ -144,8 +153,8 @@ export class Snake {
 
         for (let i = 0; i < this.tail.length; i++) {
             const seg = this.tail[i];
-            seg.length = this.segment_length - (i / this.tail.length) * (this.segment_length - globals.player_tail_size_offset_from_zero);
-            seg.radius = this.segment_radius - (i / this.tail.length) * (this.segment_radius - globals.player_tail_size_offset_from_zero);
+            seg.length = this.segment_length - (i / this.tail.length) * (this.segment_length - ((globals.player_tail_size_offset_from_zero / this.segment_length) * this.segment_length));
+            seg.radius = this.segment_radius - (i / this.tail.length) * (this.segment_radius - ((globals.player_tail_size_offset_from_zero / this.segment_radius) * this.segment_radius));
             seg.color = (this.is_local_player) ?
                 globals.local_player_colors[i % globals.local_player_colors.length] :
                 globals.network_player_colors[i % globals.network_player_colors.length];

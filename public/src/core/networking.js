@@ -64,6 +64,14 @@ export function init_network() {
         globals.local_player.position.y = server_player.position.y;
         globals.local_player.move_direction = Vector2.from_object(server_player.move_direction);
     })
+
+    socket.on("player_sprint_start", (id) => {
+        globals.network_players[id].sprint(true);
+    })
+
+    socket.on("player_sprint_stop", (id) => {
+        globals.network_players[id].sprint(false);
+    })
 }
 
 export function network_heartbeat() {
@@ -72,5 +80,18 @@ export function network_heartbeat() {
         socket.emit("player_update", globals.local_player.move_direction.to_object());
     } else {
         socket.emit("player_stop");
+    }
+}
+
+//called by the player to trigger a network request
+export function network_event(event_type) {
+    const socket = globals.socket;
+    switch (event_type) {
+        case globals.network_event_type.sprint.start:
+            socket.emit("player_sprint_start");
+            break;
+        case globals.network_event_type.sprint.stop:
+            socket.emit("player_sprint_stop");
+            break;
     }
 }
