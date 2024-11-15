@@ -25,9 +25,9 @@ function main() {
 
         utils.calculate_time();
 
-        globals.local_player.update();
-
+        
         food_manager();
+        globals.local_player.update();
         networking_manager();
 
         setTimeout(game_loop, globals.update_speed);

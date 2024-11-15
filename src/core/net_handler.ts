@@ -2,6 +2,7 @@ import { Socket } from "socket.io";
 import globals from "./globals";
 import { Snake } from "../game_objects/snake";
 import { Vector2, class_list_to_object_list } from "./utils";
+import { log_warning } from "../logger";
 
 export function handle_connection(socket: Socket) {
     globals.players[socket.id] = new Snake(Math.random() * 600, Math.random() * 400);
@@ -38,6 +39,20 @@ export function handle_connection(socket: Socket) {
     socket.on("player_sprint_stop", () => {
         globals.players[socket.id].sprint(false);
         socket.broadcast.emit("player_sprint_stop", socket.id);
+    })
+
+    socket.on("player_check_eat", () => {
+        const eat_checked = globals.players[socket.id].check_eat();
+
+        if (!eat_checked) {
+            // Player cheated
+            log_warning("CHEATER DETECTED! " + socket.id + ".... kicking");
+            socket.emit("player_kick");
+            delete globals.players[socket.id];
+            globals.io.emit("socket_disconnected", socket.id); // Kick him 
+        } else {
+
+        }
     })
 }
 

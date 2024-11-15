@@ -12,6 +12,29 @@ export class Vector2 {
         this.y = y;
     }
 
+    static magnitude(vector: Vector2) {
+        const ix = -vector.x;
+        const iy = -vector.y;
+        return Math.sqrt(ix * ix + iy * iy);
+    }
+
+    static normalized(vector: Vector2) {
+        const ix = -vector.x;
+        const iy = -vector.y;
+        const mag = 1/Math.sqrt(ix * ix + iy * iy);
+        return new Vector2(
+            ix * mag,
+            iy * mag
+        );
+    }
+
+    static sub(a: Vector2, b: Vector2) {
+        return new Vector2(
+            a.x-b.x,
+            a.y-b.y
+        );
+    }
+
     static from_object(vec: Vector2_Type) {
         return new Vector2(vec.x, vec.y);
     }

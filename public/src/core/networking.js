@@ -8,6 +8,7 @@ export function init_network() {
 
     window.addEventListener("DOMContentLoaded", () => {
         socket.emit("socket_client_ready");
+
     })
 
     socket.on("connect", () => {
@@ -17,6 +18,10 @@ export function init_network() {
             return;
         }
         globals.socket_previously_connected = true;
+    })
+
+    socket.on("player_kick", () => {
+        window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
     })
 
     //these happen at the initial connection once
@@ -102,7 +107,7 @@ export function network_heartbeat() {
 }
 
 //called by the player to trigger a network request
-export function network_event(event_type) {
+export function network_event(event_type, event_data = {}) {
     const socket = globals.socket;
     switch (event_type) {
         case globals.network_event_type.sprint.start:
@@ -110,6 +115,9 @@ export function network_event(event_type) {
             break;
         case globals.network_event_type.sprint.stop:
             socket.emit("player_sprint_stop");
+            break;
+        case globals.network_event_type.check_eat:
+            socket.emit("player_check_eat");
             break;
     }
 }

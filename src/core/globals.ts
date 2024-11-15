@@ -9,9 +9,15 @@ export default {
         normal: 0.2,
         sprint: 0.4,
     },
+    player_segment: {
+        radius: 10, // Radius of first segment
+        length: 20, // Length of first segment
+        amount: 10, // Amount of total segments in tail in the beggning
+    },
+    player_head_size_multiplier: 1.5, // The actual head radius will be the radius of the first tail segment times this
     io: new Server(),
 
-    update_speed: 1000/60,
+    update_speed: 1000 / 60,
     delta_time: Date.now(),
     current_time: Date.now(),
     previous_update_time: Date.now(),
@@ -21,6 +27,9 @@ export default {
     food_list: [] as Food[],
     food_amount: 100,
     food_radius: 10,
+    food_give_segment_amount: 1,
+    food_give_radius_amount: 1,
+
 
     //map
     map_size: {

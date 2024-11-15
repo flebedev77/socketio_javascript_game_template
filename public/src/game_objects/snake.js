@@ -4,7 +4,7 @@ import { Food } from "./food.js";
 import { network_event } from "../core/networking.js";
 
 export class Snake {
-    constructor(x, y, r, seg_amt = 20, seg_len = 10) {
+    constructor(x, y, r, seg_amt = 10, seg_len = 20) {
         this.position = new Vector2(x, y);
         this.previous_position = new Vector2(x, y);
         this.head_radius = (globals != null) ? r * globals.player_head_size_multiplier : 0;
@@ -206,7 +206,7 @@ export class Segment {
 
     draw() {
         this.ctx.strokeStyle = this.color;
-        this.ctx.lineWidth = this.radius;
+        this.ctx.lineWidth = this.radius*2;
         this.ctx.lineCap = 'round';
 
         this.ctx.beginPath();
