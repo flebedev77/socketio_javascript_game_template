@@ -6,6 +6,9 @@ import { Server } from "socket.io";
 import * as net_handler from "./core/net_handler";
 import globals from "./core/globals";
 import gameloop from "./core/gameloop";
+import init from "./core/init";
+
+init();
 
 const PORT = process.env.PORT || 3000;
 const app = express();

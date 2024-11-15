@@ -10,6 +10,12 @@ export default {
     previous_time: Date.now(),
     current_time: Date.now(),
     delta_time: 0,
+    performance_timer: {
+        start_time: 0,
+        stop_time: 0,
+        time_passed: 0,
+        running: false,
+    },
 
     //fps display
     fps: 60, //Does not actually control the update speed. Use "update_speed"
@@ -40,7 +46,7 @@ export default {
     food_give_segment_amount: 1,
     food_give_radius_amount: 1,
     food_radius: 5,
-    food_colors: ["red", "green", "blue", "orange", "purple"],
+    food_colors: ["gray"], // Not using these, because we want to avoid sending colors over the wire "red", "green", "blue", "orange", "purple"],
     food_arr: [],
 
     //keyboard

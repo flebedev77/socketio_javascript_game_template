@@ -1,5 +1,6 @@
 import { Server } from "socket.io"
 import type { Snake } from "../game_objects/snake"
+import type { Food } from "../game_objects/food"
 
 
 export default {
@@ -16,4 +17,14 @@ export default {
     previous_update_time: Date.now(),
 
     server_heartbeat_rate: 700, //every 700 milliseconds sync all clients
+
+    food_list: [] as Food[],
+    food_amount: 100,
+    food_radius: 10,
+
+    //map
+    map_size: {
+        width: 1366,
+        height: 639,
+    },
 }

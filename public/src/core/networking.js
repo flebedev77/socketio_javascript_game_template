@@ -1,6 +1,7 @@
 import globals from "./globals.js";
 import { Snake } from "../game_objects/snake.js";
 import { Vector2 } from "../utils.js";
+import { Food } from "../game_objects/food.js";
 
 export function init_network() {
     const socket = globals.socket;
@@ -18,11 +19,24 @@ export function init_network() {
         globals.socket_previously_connected = true;
     })
 
+    //these happen at the initial connection once
     socket.on("local_player_server_handshake", (local_snake_from_server) => {
         globals.local_player = new Snake(local_snake_from_server.position.x, local_snake_from_server.position.y, 10);
         globals.local_player.is_local_player = true;
         globals.local_player.init();
     })
+    socket.on("local_player_food_sync", (player_food_arr) => {
+        globals.food_arr = [];
+
+        player_food_arr.forEach((food_object) => {
+            globals.food_arr.push(new Food(
+                food_object.position.x, food_object.position.y,
+                food_object.radius
+            ));
+        })
+    })
+
+
 
     socket.on("update_players", (players) => {
         globals.network_players = {};

@@ -24,8 +24,4 @@ export default function init() {
 
     apply_input_listeners();
     init_network();    
-
-    for(let i = 0; i < 30; i++) {
-        globals.food_arr.push(new Food(Math.random() * window.innerWidth, Math.random() * window.innerHeight));
-    }
 }

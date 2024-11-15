@@ -68,3 +68,14 @@ export class Vector2 {
         };
     }
 }
+
+export function start_timer() {
+    globals.performance_timer.running = true;
+    globals.performance_timer.start_time = Date.now();
+}
+
+export function stop_timer() {
+    globals.performance_timer.running = false;
+    globals.performance_timer.stop_time = Date.now();
+    globals.performance_timer.time_passed = globals.performance_timer.stop_time - globals.performance_timer.start_time;
+}

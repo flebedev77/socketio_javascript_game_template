@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import globals from "./globals";
 import { Snake } from "../game_objects/snake";
-import { Vector2 } from "./utils";
+import { Vector2, class_list_to_object_list } from "./utils";
 
 export function handle_connection(socket: Socket) {
     globals.players[socket.id] = new Snake(Math.random() * 600, Math.random() * 400);
@@ -9,6 +9,7 @@ export function handle_connection(socket: Socket) {
     socket.broadcast.emit("new_player", globals.players[socket.id], socket.id)
     // local_player_server_handshake: does the initial sync of the clientside player to the serverside player
     socket.emit("local_player_server_handshake", globals.players[socket.id].to_object());
+    socket.emit("local_player_food_sync", class_list_to_object_list(globals.food_list));
 
     setInterval(() => {
         socket.emit("update_players", globals.players);

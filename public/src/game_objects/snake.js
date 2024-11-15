@@ -179,6 +179,10 @@ export class Snake {
         this.segment_length += seg_radius;
 
         this.update_tail_radius();
+
+        if (this.is_local_player) {
+            // globals.socket.emit("player_eat", )
+        }
     }
 }
 
