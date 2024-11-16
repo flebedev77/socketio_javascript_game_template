@@ -6,10 +6,12 @@ import { Food } from "../game_objects/food.js";
 export function init_network() {
     const socket = globals.socket;
 
-    window.addEventListener("DOMContentLoaded", () => {
-        socket.emit("socket_client_ready");
-
-    })
+    //Notify the server as soon as the socket is able to send/receive messages
+    const socket_ready_interval = setInterval(() => {
+        socket.emit("socket_client_ready", () => {
+            clearInterval(socket_ready_interval);
+        });
+    }, 500);
 
     socket.on("connect", () => {
         //If was reconnected (if the server crashed and came back up) then refresh the client
@@ -94,6 +96,10 @@ export function init_network() {
 
     socket.on("player_sprint_stop", (id) => {
         globals.network_players[id].sprint(false);
+    })
+
+    socket.on("player_ate", (id) => {
+        globals.network_players[id].eat(globals.food_give_segment_amount, globals.food_give_radius_amount);
     })
 }
 

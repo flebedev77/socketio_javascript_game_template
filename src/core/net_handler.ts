@@ -2,19 +2,29 @@ import { Socket } from "socket.io";
 import globals from "./globals";
 import { Snake } from "../game_objects/snake";
 import { Vector2, class_list_to_object_list } from "./utils";
-import { log_warning } from "../logger";
+import { log_info, log_warning } from "../logger";
 
 export function handle_connection(socket: Socket) {
-    globals.players[socket.id] = new Snake(Math.random() * 600, Math.random() * 400);
+    globals.players[socket.id] = new Snake(Math.random() * globals.map_size.width, Math.random() * globals.map_size.height);
 
-    socket.broadcast.emit("new_player", globals.players[socket.id], socket.id)
-    // local_player_server_handshake: does the initial sync of the clientside player to the serverside player
-    socket.emit("local_player_server_handshake", globals.players[socket.id].to_object());
-    socket.emit("local_player_food_sync", class_list_to_object_list(globals.food_list));
+    // Tell other players this player joined
+    socket.broadcast.emit("new_player", globals.players[socket.id].to_object(), socket.id)
 
-    setInterval(() => {
+    socket.on("socket_client_ready", (callback) => {
+        log_info("Socket ready: " + socket.id);
+
+        // Tell current player about other players
         socket.emit("update_players", globals.players);
-    }, 1500);
+        
+        // Tell the current player about the food on the server
+        socket.emit("local_player_food_sync", class_list_to_object_list(globals.food_list));
+
+        // local_player_server_handshake: does the initial sync of the clientside player to the serverside player
+        socket.emit("local_player_server_handshake", globals.players[socket.id].to_object());
+
+
+        callback();
+    })
 
     socket.on("disconnect", () => {
         delete globals.players[socket.id];
@@ -46,12 +56,12 @@ export function handle_connection(socket: Socket) {
 
         if (!eat_checked) {
             // Player cheated
-            log_warning("CHEATER DETECTED! " + socket.id + ".... kicking");
-            socket.emit("player_kick");
-            delete globals.players[socket.id];
-            globals.io.emit("socket_disconnected", socket.id); // Kick him 
+            // log_warning("CHEATER DETECTED! " + socket.id + ".... kicking");
+            // socket.emit("player_kick");
+            // delete globals.players[socket.id];
+            // globals.io.emit("socket_disconnected", socket.id); // Kick him 
         } else {
-
+            socket.broadcast.emit("player_ate", socket.id);
         }
     })
 }

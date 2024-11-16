@@ -1,5 +1,5 @@
 import globals from "../core/globals";
-import { Vector2 } from "../core/utils";
+import { aabb_collision, Rect2, Vector2 } from "../core/utils";
 
 export class Snake {
     position: Vector2;
@@ -33,9 +33,25 @@ export class Snake {
         for(let i = globals.food_list.length-1; i >= 0; i--) {
             const food_element = globals.food_list[i];
 
-            if (Vector2.magnitude(Vector2.sub(food_element.position, this.position)) < this.head_radius + globals.food_radius) {
+            // if (Vector2.magnitude(Vector2.sub(food_element.position, this.position)) < this.head_radius + globals.food_radius) {
+            if (aabb_collision(
+                new Rect2(
+                    food_element.position.x - food_element.radius,
+                    food_element.position.y - food_element.radius,
+                    food_element.radius*2,
+                    food_element.radius*2,
+                ),
+                new Rect2(
+                    this.position.x - this.head_radius,
+                    this.position.y - this.head_radius,
+                    this.head_radius*2,
+                    this.head_radius*2,
+                ),
+            )) {
                 this.segment_radius += globals.food_give_radius_amount;
                 this.segment_amount += globals.food_give_segment_amount;
+
+                this.head_radius = this.segment_radius * globals.player_head_size_multiplier;
                 return true;
             }
         }

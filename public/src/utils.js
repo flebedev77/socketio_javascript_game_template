@@ -18,6 +18,14 @@ export function pick_random_from_array(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
+export class Rect2 {
+    constructor(x, y, w, h) {
+        this.position = new Vector2(x, y);
+        this.width = w;
+        this.height = h;
+    }
+}
+
 export class Vector2 {
     constructor(x, y) {
         this.x = x;
@@ -78,4 +86,13 @@ export function stop_timer() {
     globals.performance_timer.running = false;
     globals.performance_timer.stop_time = Date.now();
     globals.performance_timer.time_passed = globals.performance_timer.stop_time - globals.performance_timer.start_time;
+}
+
+export function aabb_collision(a, b) {
+    return (
+        a.position.x + a.width > b.position.x &&
+        a.position.x < b.position.x + b.width &&
+        a.position.y + a.height > b.position.y &&
+        a.position.y < b.position.y + b.height
+    );
 }

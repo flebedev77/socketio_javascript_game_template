@@ -3,6 +3,16 @@ type Vector2_Type = {
     y: number;
 }
 
+export class Rect2 {
+    position: Vector2;
+    width: number;
+    height: number;
+    constructor(x: number, y: number, w: number, h: number) {
+        this.position = new Vector2(x, y);
+        this.width = w;
+        this.height = h;
+    }
+}
 
 export class Vector2 {
     x: number;
@@ -72,4 +82,13 @@ export function class_object_to_serializable_object(input: {[id: string]: any}) 
         obj[key] = input[key].to_object();
     }
     return obj;
+}
+
+export function aabb_collision(a: Rect2, b: Rect2) {
+    return (
+        a.position.x + a.width > b.position.x &&
+        a.position.x < b.position.x + b.width &&
+        a.position.y + a.height > b.position.y &&
+        a.position.y < b.position.y + b.height
+    );
 }
