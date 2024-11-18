@@ -10,8 +10,25 @@ const LOG_TYPE = {
 }
 
 function log(msg: any, info_level: Number) {
+    const days = [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun",
+    ];
+
+    let pm = false;
+
     let date = new Date();
-    let dateStr = `[${date.getDay()}:${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] `;
+
+    if (date.getHours() > 12) {
+        pm = true;
+    }
+
+    let dateStr = chalk.green(`[${days[date.getDay()]}:${(pm) ? "PM" : "AM"}:${(!pm) ? date.getHours() : Math.abs(date.getHours()-12)}:${date.getMinutes()}:${date.getSeconds()}] `);
 
     if (!fs.existsSync(config.logs_path)) {
         console.warn(chalk.yellow(dateStr + `Logs folder does not exist at ${config.logs_path}`))
