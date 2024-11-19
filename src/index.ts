@@ -28,12 +28,12 @@ net_handler.init_network();
 //@ts-ignore
 globals.io.on("connection", (socket) => {
     socket.join(socket.id);
-    logger.log_info(`Socket connected with id ${socket.id}`);
+    logger.log_info(`Socket connected: ${socket.id}`);
 
     net_handler.handle_connection(socket);
 
     socket.on("disconnect", () => {
-        logger.log_info(`Socket disconnected with id ${socket.id}`);
+        logger.log_info(`Socket disconnected: ${socket.id}`);
     })
 })
 

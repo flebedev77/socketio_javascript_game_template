@@ -11,7 +11,7 @@ export function handle_connection(socket: Socket) {
     socket.broadcast.emit("new_player", globals.players[socket.id].to_object(), socket.id)
 
     socket.on("socket_client_ready", (callback) => {
-        log_info("Socket ready: " + socket.id);
+        log_info(`Socket ready: ${socket.id}`);
 
         // Tell current player about other players
         socket.emit("update_players", globals.players);

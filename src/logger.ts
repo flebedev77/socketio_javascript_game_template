@@ -11,13 +11,13 @@ const LOG_TYPE = {
 
 function log(msg: any, info_level: Number) {
     const days = [
+        "Sun",
         "Mon",
         "Tue",
         "Wed",
         "Thu",
         "Fri",
         "Sat",
-        "Sun",
     ];
 
     let pm = false;
