@@ -101,6 +101,10 @@ export function init_network() {
     socket.on("player_ate", (id) => {
         globals.network_players[id].eat(globals.food_give_segment_amount, globals.food_give_radius_amount);
     })
+
+    socket.on("killed", () => {
+        alert("You suck!! Ha ha!");
+    })
 }
 
 export function network_heartbeat() {

@@ -15,6 +15,7 @@ export default {
         amount: 10, // Amount of total segments in tail in the beggning
     },
     player_head_size_multiplier: 1.5, // The actual head radius will be the radius of the first tail segment times this
+    player_tail_size_offset_from_zero: 8,
     io: new Server(),
 
     update_speed: 1000 / 60,

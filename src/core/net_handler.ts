@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import globals from "./globals";
 import { Snake } from "../game_objects/snake";
-import { Vector2, class_list_to_object_list } from "./utils";
+import { Vector2, class_list_to_object_list, get_player, line_circle_collision } from "./utils";
 import { log_info, log_warning } from "../logger";
 
 export function handle_connection(socket: Socket) {
@@ -13,46 +13,63 @@ export function handle_connection(socket: Socket) {
     socket.on("socket_client_ready", (callback) => {
         log_info(`Socket ready: ${socket.id}`);
 
+        const player = get_player(socket.id);
+
+        if (player == undefined) {
+            log_warning(`Player with id ${socket.id} does not exist!`);
+            return;
+        }
+
         // Tell current player about other players
         socket.emit("update_players", globals.players);
-        
+
         // Tell the current player about the food on the server
         socket.emit("local_player_food_sync", class_list_to_object_list(globals.food_list));
 
         // local_player_server_handshake: does the initial sync of the clientside player to the serverside player
-        socket.emit("local_player_server_handshake", globals.players[socket.id].to_object());
+        socket.emit("local_player_server_handshake", player.to_object());
 
 
         callback();
     })
 
     socket.on("disconnect", () => {
-        delete globals.players[socket.id];
-        globals.io.emit("socket_disconnected", socket.id);
+        disconnect_player(socket);
     })
 
     socket.on("player_update", (move_direction) => {
-        globals.players[socket.id].move_direction = new Vector2(move_direction.x, move_direction.y);
+        const player = get_player(socket.id);
+        if (player == null) return;
+        player.move_direction = new Vector2(move_direction.x, move_direction.y);
         send_player_update(socket, socket.id);
     })
 
     socket.on("player_stop", () => {
-        globals.players[socket.id].move_direction = new Vector2(0, 0);
+        const player = get_player(socket.id);
+        if (player == null) return;
+        player.move_direction = new Vector2(0, 0);
         send_player_update(socket, socket.id);
     })
 
     socket.on("player_sprint_start", () => {
-        globals.players[socket.id].sprint(true);
+        const player = get_player(socket.id);
+        if (player == null) return;
+        player.sprint(true);
         socket.broadcast.emit("player_sprint_start", socket.id);
     })
 
     socket.on("player_sprint_stop", () => {
-        globals.players[socket.id].sprint(false);
+        const player = get_player(socket.id);
+        if (player == null) return;
+        player.sprint(false);
         socket.broadcast.emit("player_sprint_stop", socket.id);
     })
 
     socket.on("player_check_eat", () => {
-        const eat_checked = globals.players[socket.id].check_eat();
+        const player = get_player(socket.id);
+        if (player == null) return;
+
+        const eat_checked = player.check_eat();
 
         if (!eat_checked) {
             // Player cheated
@@ -61,6 +78,7 @@ export function handle_connection(socket: Socket) {
             // delete globals.players[socket.id];
             // globals.io.emit("socket_disconnected", socket.id); // Kick him 
         } else {
+            player.eat(globals.food_give_segment_amount, globals.food_give_radius_amount);
             socket.broadcast.emit("player_ate", socket.id);
         }
     })
@@ -72,10 +90,43 @@ function send_player_update(socket: Socket, id: string) {
 
 export function network_heartbeat() {
     for (const player_socket_id in globals.players) {
-        globals.io.emit("local_player_sync", player_socket_id, globals.players[player_socket_id].to_object());
+        const player_a = get_player(player_socket_id);
+        if (player_a == null) continue;
+
+        globals.io.emit("local_player_sync", player_socket_id, player_a.to_object());
+
+
+        //death collisions
+        for (const b_player_socket_id in globals.players) {
+            if (b_player_socket_id == player_socket_id) continue;
+            const player_b = get_player(b_player_socket_id);
+            if (player_b == null) continue;
+
+            for (let i = 0; i < player_b.tail.length; ++i) {
+                const tail_segment = player_b.tail[i];
+
+                if (line_circle_collision(tail_segment, {
+                    x: player_a.position.x,
+                    y: player_a.position.y,
+                    radius: player_a.head_radius,
+                })) {
+                    globals.io.to(player_socket_id).emit("killed");
+                    disconnect_player_str(player_socket_id);
+                }
+            }
+        }
     }
 }
 
 export function init_network() {
     const io = globals.io;
+}
+
+function disconnect_player(socket: Socket) {
+    disconnect_player_str(socket.id);
+}
+
+function disconnect_player_str(socket_id: string) {
+    delete globals.players[socket_id];
+    globals.io.emit("socket_disconnected", socket_id);
 }
