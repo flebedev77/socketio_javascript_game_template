@@ -10,7 +10,6 @@ import { init_network } from "./networking.js";
 export default function init() {
     globals.socket = io();
 
-
     function resize_canvas() {
         selector.canvas.width = window.innerWidth;
         selector.canvas.height = window.innerHeight;
@@ -26,5 +25,5 @@ export default function init() {
     globals.local_player.init();
 
     apply_input_listeners();
-    init_network();    
+    init_network();
 }

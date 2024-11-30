@@ -2,7 +2,7 @@ import { Socket } from "socket.io";
 import globals from "./globals";
 import { Snake } from "../game_objects/snake";
 import { Vector2, class_list_to_object_list, get_player, line_circle_collision } from "./utils";
-import { log_info, log_warning } from "../logger";
+import { log_error, log_info, log_warning } from "../logger";
 
 export function handle_connection(socket: Socket) {
     globals.players[socket.id] = new Snake(Math.random() * globals.map_size.width, Math.random() * globals.map_size.height);
@@ -10,8 +10,14 @@ export function handle_connection(socket: Socket) {
     // Tell other players this player joined
     socket.broadcast.emit("new_player", globals.players[socket.id].to_object(), socket.id)
 
-    socket.on("socket_client_ready", (callback) => {
-        log_info(`Socket ready: ${socket.id}`);
+    socket.on("socket_client_ready", (username, callback) => {
+        if (typeof username != "string" || username.trim() == "") {
+            disconnect_player_str(socket.id);
+            log_error(`Invalid username: ${socket.id} ${username}`);
+            return;
+        }
+
+        log_info(`Socket ready: ${socket.id} ${username}`);
 
         const player = get_player(socket.id);
 

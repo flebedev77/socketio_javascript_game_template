@@ -1,4 +1,5 @@
 import globals from "./globals.js";
+import selector from "../front_end/selector.js";
 import { Snake } from "../game_objects/snake.js";
 import { Vector2 } from "../utils.js";
 import { Food } from "../game_objects/food.js";
@@ -8,7 +9,8 @@ export function init_network() {
 
     //Notify the server as soon as the socket is able to send/receive messages
     const socket_ready_interval = setInterval(() => {
-        socket.emit("socket_client_ready", () => {
+        socket.emit("socket_client_ready", globals.username, () => {
+            selector.connecting_screen.style.display = "none";
             clearInterval(socket_ready_interval);
         });
     }, 500);

@@ -12,9 +12,25 @@ import networking_manager from "./managers/networking_manager.js";
 const ctx = globals.canvas_context;
 const canvas = selector.canvas;
 
-window.onload = function() {
-    main();
-}
+// window.onload = function() {
+//     main();
+// }
+
+selector.invalid_username_message.style.display = "none";
+selector.connecting_screen.style.display = "none";
+selector.start_button.addEventListener("click", () => {
+    if (selector.username_input.value.trim() != "") {
+        selector.start_dialog.style.display = "none";
+        selector.connecting_screen.style.display = "grid";
+        globals.username = selector.username_input.value;
+        main();
+    } else {
+        selector.invalid_username_message.style.display = "block";
+        setTimeout(() => {
+            selector.invalid_username_message.style.display = "none";
+        }, 1000);
+    }
+})
 
 function main() {
     init();

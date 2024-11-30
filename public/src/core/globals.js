@@ -23,6 +23,7 @@ export default {
     fps_display_rate: 100,
 
     //player
+    username: "",
     local_player: null, //Player initialized in networking.js
     player_tail_size_offset_from_zero: 8, //If set to zero, the last tail segment will be infinitly thin and short
     local_player_colors: ["#4A2C0B", "#73610E"],
