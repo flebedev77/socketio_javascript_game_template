@@ -78,7 +78,7 @@ export default {
     },
 
     //networking
-    socket: io(),
+    socket: null,
     socket_previously_connected: false,
     network_players: {},
     network_update_ping: 1000, //So that the clients dont ddos the server

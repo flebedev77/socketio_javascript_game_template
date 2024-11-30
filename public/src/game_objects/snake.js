@@ -192,10 +192,12 @@ export class Segment {
     * @param {Vector2} a - The anchor point
     * @param {number} len - Length of the segment
     * @param {number} radius - The thickness of the segment
+    * @param {string} color - The color of the segment
+    * @param {Vector2} b - Dosen't have to be supplied
     */
-    constructor(a, len = 0, radius = 0, color = "red") {
+    constructor(a, len = 0, radius = 0, color = "red", b = new Vector2(0, 0)) {
         this.a = a;
-        this.b = new Vector2(0, 0);
+        this.b = b;
         this.radius = radius;
         this.length = len;
 

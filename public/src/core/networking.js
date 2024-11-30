@@ -53,11 +53,26 @@ export function init_network() {
 
                 const network_player = players[network_player_socket_id];
 
+
                 globals.network_players[network_player_socket_id] = new Snake(
                     network_player.position.x,
                     network_player.position.y,
-                    10,
+                    network_player.segment_radius,
+                    network_player.segment_amount,
+                    network_player.segment_length
                 );
+
+                try {
+                    network_player.tail.forEach((tail_segment, i) => {
+                        const local_network_player_tail_segment = globals.network_players[network_player_socket_id].tail[i];
+                        local_network_player_tail_segment.a.x = tail_segment.a.x;
+                        local_network_player_tail_segment.a.y = tail_segment.a.y;
+                        local_network_player_tail_segment.b.x = tail_segment.b.x;
+                        local_network_player_tail_segment.b.y = tail_segment.b.y;
+                    })
+                } catch (e) {
+                    console.error(`Error setting ${network_player_socket_id} tail position `, e);
+                }
             }
         }
     })

@@ -76,6 +76,7 @@ export class Snake {
                 this.segment_amount += globals.food_give_segment_amount;
 
                 this.head_radius = this.segment_radius * globals.player_head_size_multiplier;
+                globals.food_list.splice(i, 1);
                 return true;
             }
         }
@@ -124,7 +125,8 @@ export class Snake {
             head_radius: this.head_radius,
             segment_radius: this.segment_radius,
             segment_amount: this.segment_amount,
-            tail: this.tail.map((seg) => seg.to_object()),
+            segmnet_length: this.segment_length,
+            // tail: this.tail.map((seg) => seg.to_object()),
         }
     }
 }

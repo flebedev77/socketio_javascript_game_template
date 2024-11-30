@@ -8,6 +8,9 @@ import { init_network } from "./networking.js";
 
 //ran on page load
 export default function init() {
+    globals.socket = io();
+
+
     function resize_canvas() {
         selector.canvas.width = window.innerWidth;
         selector.canvas.height = window.innerHeight;
