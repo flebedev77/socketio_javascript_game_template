@@ -1,9 +1,11 @@
 import selector from "../front_end/selector.js";
 import { Snake } from "../game_objects/snake.js";
 import { Vector2 } from "../utils.js";
+import { deep_copy } from "../utils.js";
 
-export default {
+export let globals = {
     canvas_context: selector.canvas.getContext("2d"),
+    gameloop_running: false,
 
     //time
     update_speed: 1000/60,
@@ -90,4 +92,9 @@ export default {
         },
         check_eat: 3,
     },
+
+    start_callback: function() {},
 }
+
+export const unchanged_globals = deep_copy(globals);
+export default globals;

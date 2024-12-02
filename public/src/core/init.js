@@ -24,6 +24,8 @@ export default function init() {
     globals.local_player.is_local_player = true;
     globals.local_player.init();
 
+    globals.gameloop_running = true;
+
     apply_input_listeners();
     init_network();
 }

@@ -25,6 +25,8 @@ export class Snake {
 
         this.ctx = globals.canvas_context;
 
+        this.username = globals.username;
+
         this.init();
     }
 
@@ -49,6 +51,12 @@ export class Snake {
         this.tail.forEach((segment) => {
             segment.draw();
         })
+
+        this.ctx.fillStyle = "white";
+        this.ctx.textAlign = "center"; 
+        this.ctx.textBaseline = "middle"; 
+        this.ctx.font = `${Math.max(this.head_radius-20, 20)}px sans-serif`;
+        this.ctx.fillText(this.username, this.position.x, this.position.y - (this.head_radius + 5));
     }
 
     update() {

@@ -1,8 +1,9 @@
 import globals from "./globals.js";
 import selector from "../front_end/selector.js";
 import { Snake } from "../game_objects/snake.js";
-import { Vector2 } from "../utils.js";
+import { alert_popup, Vector2 } from "../utils.js";
 import { Food } from "../game_objects/food.js";
+import reset from "../managers/reset_manager.js";
 
 export function init_network() {
     const socket = globals.socket;
@@ -63,6 +64,7 @@ export function init_network() {
                     network_player.segment_amount,
                     network_player.segment_length
                 );
+                globals.network_players[network_player_socket_id].username = network_player.username;
 
                 try {
                     network_player.tail.forEach((tail_segment, i) => {
@@ -79,7 +81,7 @@ export function init_network() {
         }
     })
 
-    socket.on("new_player", (player, player_socket_id) => {
+    socket.on("new_player", (player, player_socket_id, username) => {
         if (player_socket_id == socket.id) return;
 
         globals.network_players[player_socket_id] = new Snake(
@@ -87,6 +89,7 @@ export function init_network() {
             player.position.y,
             10,
         );
+        globals.network_players[player_socket_id].username = username;
     })
 
     socket.on("socket_disconnected", (disconnected_player_socket_id) => {
@@ -119,8 +122,13 @@ export function init_network() {
         globals.network_players[id].eat(globals.food_give_segment_amount, globals.food_give_radius_amount);
     })
 
-    socket.on("killed", () => {
-        alert("You suck!! Ha ha!");
+    socket.on("killed", (id) => {
+        alert_popup("Dead", `You were killed by ${globals.network_players[id].username}`, "Continue");
+
+        reset();
+
+        selector.start_dialog.style.display = "";
+        selector.connecting_screen.style.display = "";
     })
 }
 

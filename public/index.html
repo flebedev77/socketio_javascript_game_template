@@ -4,106 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiplayer Snake</title>
-<style>
-    * {
-        font-family: sans-serif;
-    }
-    #canvas {
-        z-index: -1;
-        background: #1F1F1F;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-    }
-    #fps_counter {
-        color: white;
-        font-weight: bold;
-        position: fixed;
-        top: 5px;
-        left: 5px;
-        margin: 0;
-        padding: 3px 8px;
-        background: #1F1F1F;
-        z-index: 10;
-    }
-    ui, #start_dialog {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-    }
-    #start_menu {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 15px;
-        background: white;
-        border-radius: 10px;
-        display: flex;
-        gap: 5px;
-        flex-direction: column;
-        z-index: 5;
-        overflow: hidden;
-    }
-    #background {
-        background: #1F1F1F;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-    }
-    #start_button {
-        margin: -15px;
-        margin-top: 5px;
-        padding: 8px;
-        outline: none;
-        border: none;
-        color: #0179FF;
-        font-weight: bold;
-        filter: brightness(110%);
-        border-top: 1px solid lightgray;
-    }
-    .invalid {
-        color: red;
-        text-align: center;
-        font-size: 12px;
-        padding: 0;
-        margin: 0;
-    }
-    #connecting_screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100vw;
-        height: 100vh;
-        background: #1F1F1F;
-        display: grid;
-        place-items: center;
-    }
-    #connecting_screen > h1 {
-        color: white;
-        font-weight: bold;
-        text-align: center;
-    }
-</style>
+    <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body>
     <p id="fps_counter">FPS: </p>
     <ui>
         <div id="start_dialog">
-            <div id="background"></div>
+            <div class="background"></div>
             <div id="start_menu">
                 <label for="username_input">Username:</label>
                 <input type="text" name="username_input" id="username_input" spellcheck="false" autocomplete="off">
                 <p class="invalid">Invalid username!</p>
                 <button id="start_button">Start</button>
+            </div>
+        </div>
+        <div id="alert_dialog">
+            <div class="background"></div>
+            <div id="alert_popup">
+                <h1 id="alert_title">Title</h1>
+                <p id="alert_content">Body. Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, in.</p>
+                <button id="alert_button">Ok</button>
             </div>
         </div>
         <div id="connecting_screen">

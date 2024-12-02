@@ -8,6 +8,7 @@ import * as utils from "./utils.js";
 //managers
 import food_manager from "./managers/food_manager.js";
 import networking_manager from "./managers/networking_manager.js";
+import dom_init from "./core/dom_init.js";
 
 const ctx = globals.canvas_context;
 const canvas = selector.canvas;
@@ -16,21 +17,23 @@ const canvas = selector.canvas;
 //     main();
 // }
 
-selector.invalid_username_message.style.display = "none";
-selector.connecting_screen.style.display = "none";
-selector.start_button.addEventListener("click", () => {
+globals.start_callback = () => {
     if (selector.username_input.value.trim() != "") {
-        selector.start_dialog.style.display = "none";
+        // selector.start_dialog.style.display = "none";
         selector.connecting_screen.style.display = "grid";
         globals.username = selector.username_input.value;
-        main();
+        setTimeout(() => {
+            main();
+        }, 500)
     } else {
         selector.invalid_username_message.style.display = "block";
         setTimeout(() => {
             selector.invalid_username_message.style.display = "none";
-        }, 1000);
+        }, 1000)
     }
-})
+}
+
+dom_init();
 
 function main() {
     init();
@@ -41,11 +44,11 @@ function main() {
 
         utils.calculate_time();
 
-        
+
         food_manager();
         globals.local_player.update();
         networking_manager();
 
-        setTimeout(game_loop, globals.update_speed);
+        if (globals.gameloop_running) setTimeout(game_loop, globals.update_speed);
     }
 }

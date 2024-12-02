@@ -12,6 +12,7 @@ export class Snake {
     head_radius: number;
 
     tail: Segment[];
+    username: string
 
     constructor(x: number, y: number) {
         this.position = new Vector2(x, y);
@@ -21,6 +22,7 @@ export class Snake {
         this.segment_length = globals.player_segment.length;
         this.segment_radius = globals.player_segment.radius;
         this.head_radius = globals.player_segment.radius * globals.player_head_size_multiplier;
+        this.username = "";
 
         this.tail = [];
 

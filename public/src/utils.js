@@ -96,3 +96,56 @@ export function aabb_collision(a, b) {
         a.position.y < b.position.y + b.height
     );
 }
+
+export function deep_copy(obj) {
+    if (obj === null || typeof obj !== 'object') {
+        return obj; // base case: primitive value or null
+    }
+
+    if (Array.isArray(obj)) {
+        const arrCopy = [];
+        for (let i = 0; i < obj.length; i++) {
+            arrCopy[i] = deep_copy(obj[i]);
+        }
+        return arrCopy;
+    }
+
+    const objCopy = {};
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            objCopy[key] = deep_copy(obj[key]);
+        }
+    }
+    return objCopy;
+}
+
+export function deep_merge(target, source) {
+    // Check if source is an object and target is also an object
+    if (source !== null && typeof source === 'object' && target !== null && typeof target === 'object') {
+        // Iterate through the keys of the source object
+        for (let key in source) {
+            if (source.hasOwnProperty(key)) {
+                // If the property in the source is an object, we need to recurse
+                if (typeof source[key] === 'object' && source[key] !== null) {
+                    // If the target doesn't have this key or it's not an object, create an object
+                    if (!target[key] || typeof target[key] !== 'object') {
+                        target[key] = {};
+                    }
+                    // Recursively merge the properties
+                    deep_merge(target[key], source[key]);
+                } else {
+                    // If the property is a primitive (not an object), directly assign it
+                    target[key] = source[key];
+                }
+            }
+        }
+    }
+    return target;
+}
+
+export function alert_popup(title, content, button = "Ok") {
+    selector.alert.dialog.style.display = "flex";
+    selector.alert.title.innerText = title,
+        selector.alert.content.innerText = content;
+    selector.alert.button.innerText = button;
+}

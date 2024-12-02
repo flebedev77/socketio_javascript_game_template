@@ -7,8 +7,6 @@ import { log_error, log_info, log_warning } from "../logger";
 export function handle_connection(socket: Socket) {
     globals.players[socket.id] = new Snake(Math.random() * globals.map_size.width, Math.random() * globals.map_size.height);
 
-    // Tell other players this player joined
-    socket.broadcast.emit("new_player", globals.players[socket.id].to_object(), socket.id)
 
     socket.on("socket_client_ready", (username, callback) => {
         if (typeof username != "string" || username.trim() == "") {
@@ -25,6 +23,11 @@ export function handle_connection(socket: Socket) {
             log_warning(`Player with id ${socket.id} does not exist!`);
             return;
         }
+
+        player.username = username;
+
+        // Tell other players this player joined
+        socket.broadcast.emit("new_player", globals.players[socket.id].to_object(), socket.id, username);
 
         // Tell current player about other players
         socket.emit("update_players", globals.players);
@@ -116,7 +119,7 @@ export function network_heartbeat() {
                     y: player_a.position.y,
                     radius: player_a.head_radius,
                 })) {
-                    globals.io.to(player_socket_id).emit("killed");
+                    globals.io.to(player_socket_id).emit("killed", b_player_socket_id);
                     disconnect_player_str(player_socket_id);
                 }
             }
